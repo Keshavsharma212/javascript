@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Form data store in localstorage</title>
+    <style>
+        input {
+            margin-top: 4px;
+        }
+
+        button {
+            margin-top: 4px;
+            margin-left: 100px;
+        }
+
+        thead {
+            background-color: rgba(245, 238, 238, 0.993);
+            border-color: aliceblue;
+        }
+
+        th, td {
+            border: 1px solid #dddddd;
+        }
+
+        .container {
+            display: flex;
+            margin-top: 20px;
+            
+        }
+       
+        .div1, .div2 {
+            flex: 1; /* Distribute space evenly */
+        }
+
+        .div1 {
+            padding-left: 180px;
+            border-right: 1px solid #000;
+        }
+
+        .div2 {
+            margin-left: 50px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="div1">
+            <h1>StudentForm</h1>
+            <form id="myForm">
+                <label>First Name :</label>
+                <input type="text" id="fname" required><br>
+
+                <label>Last Name :</label>
+                <input type="text" id="lname" required><br>
+
+                <label>Email :  </label>
+                <input type="text" id="email" style="margin-left: 30px;" required><br>
+
+                <label>Password :</label>
+                <input type="password" id="password" style="margin-left:8px;" required><br>
+
+             
+                <label>Gender:</label>
+                <input type="radio" id="male" name="gender" value="male">
+                <label for="male">Male</label>
+                <input type="radio" id="female" name="gender" value="female">
+                <label for="female">Female</label><br/>
+
+                <label>City :</label>
+                <input type="text" id="city" style="margin-left: 40px;" required><br>
+
+                <button type="button" onclick="formdatasubmit()">Submit</button>
+            </form>
+        </div>
+
+        <div class="div2">
+            <h1>Student data in table </h1>
+            <table id="studentdata" class="table">
+                <thead>
+                    <tr>
+                        <th>FirstName</th>
+                        <th>LastName</th>
+                        <th>Email</th>
+                        <th>Password</th>
+                        <th>Gender</th>
+                        <th>City</th>
+                    </tr>
+                </thead>
+                <tbody id="tbody">
+                    <!-- Data will be inserted here dynamically -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+      
+        function formdatasubmit() {
+            var formData = {
+            firstname: document.querySelector("#fname").value,
+            lastname: document.querySelector("#lname").value,
+            email:    document.querySelector("#email").value,
+            password: document.querySelector("#password").value,
+            gender: document.querySelector('input[name="gender"]:checked').value,
+           city: document.querySelector("#city").value,
+          };
+           // Get existing data from local storage or initialize an empty array
+   var storedData = JSON.parse(localStorage.getItem("Userdata"))|| [];
+          
+   storedData.push(formData);
+//   console.log(storedData)// checked data is insert storeddata yes or not
+
+   localStorage.setItem("Userdata",JSON.stringify(storedData));
+
+   updateTable();
+
+        }
+
+        function  updateTable(){
+            var tableBody = document.getElementById("tbody");
+
+            tableBody.innerHTML = '';
+
+            // Retrieve data from local storage
+            var storedData = JSON.parse(localStorage.getItem("Userdata")) || [];
+         
+        
+               console.log(storedData);
+
+                  // Update the table with the data
+              storedData.map(function (element){
+             var row = tableBody.insertRow(tableBody.rows.length);
+
+               // Add cell data
+               row.insertCell(0).textContent = element.firstname;
+               row.insertCell(1).textContent =  element.lastname;
+               row.insertCell(2).textContent = element.email;
+              row.insertCell(3).textContent = element.password;
+              row.insertCell(4).textContent = element.gender;
+               row.insertCell(5).textContent = element.city;
+            });
+       
+        }
+        updateTable();
+
+          </script>
+</body>
+</html>
+
